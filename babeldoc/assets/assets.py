@@ -15,6 +15,7 @@ from babeldoc.assets.embedding_assets_metadata import (
     DOCLAYOUT_YOLO_DOCSTRUCTBENCH_IMGSZ1024ONNX_SHA3_256,
 )
 from babeldoc.assets.embedding_assets_metadata import EMBEDDING_FONT_METADATA
+from babeldoc.assets.embedding_assets_metadata import LINGOSSEY_BUNDLED_FONTS
 from babeldoc.assets.embedding_assets_metadata import FONT_METADATA_URL
 from babeldoc.assets.embedding_assets_metadata import FONT_URL_BY_UPSTREAM
 from babeldoc.assets.embedding_assets_metadata import TIKTOKEN_CACHES
@@ -279,12 +280,26 @@ def get_font_url_by_name_and_upstream(font_file_name: str, upstream: str):
     return FONT_URL_BY_UPSTREAM[upstream](font_file_name)
 
 
+def _pasang_font_bundel(font_file_name: str) -> None:
+    """Lingossey: font yang dibundel di paket disalin ke cache, tanpa unduh."""
+    if font_file_name not in LINGOSSEY_BUNDLED_FONTS:
+        return
+    tujuan = get_cache_file_path(font_file_name, "fonts")
+    meta = LINGOSSEY_BUNDLED_FONTS[font_file_name]
+    if verify_file(tujuan, meta["sha3_256"]):
+        return
+    sumber = Path(__file__).parent / "fonts_lingossey" / font_file_name
+    tujuan.parent.mkdir(parents=True, exist_ok=True)
+    tujuan.write_bytes(sumber.read_bytes())
+
+
 async def get_font_and_metadata_async(
     font_file_name: str,
     client: httpx.AsyncClient | None = None,
     fastest_upstream: str | None = None,
     font_metadata: dict | None = None,
 ):
+    _pasang_font_bundel(font_file_name)
     cache_file_path = get_cache_file_path(font_file_name, "fonts")
     if font_file_name in EMBEDDING_FONT_METADATA and verify_file(
         cache_file_path, EMBEDDING_FONT_METADATA[font_file_name]["sha3_256"]
@@ -394,6 +409,8 @@ def get_font_family(lang_code: str):
 
 
 async def download_all_fonts_async(client: httpx.AsyncClient | None = None):
+    for font_file_name in LINGOSSEY_BUNDLED_FONTS:
+        _pasang_font_bundel(font_file_name)
     for font_file_name in EMBEDDING_FONT_METADATA:
         if not verify_file(
             get_cache_file_path(font_file_name, "fonts"),

@@ -1,0 +1,15 @@
+name: Lingossey - bangun BabelDOC untuk Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [lingossey]
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    uses: ./.github/workflows/build-wheel-matrix.yml
+    with:
+      platform_group: windows

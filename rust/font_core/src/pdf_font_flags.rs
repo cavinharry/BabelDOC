@@ -139,6 +139,38 @@ pub(super) fn lookup(sha: &str) -> Result<PdfFontFlags, FontError> {
         "85c1d6460b2e169b3d53ac60f6fb7a219fb99923027d78fb64b679475e2ddae4" => {
             (false, false, false, true)
         }
+        // LiberationSans-Bold.ttf (Lingossey)
+        "de8acbbbe885d4331391ceb92c646e0716eeba8fccf8525a3f25db287e08c1b1" => {
+            (true, false, false, false)
+        }
+        // LiberationSans-BoldItalic.ttf (Lingossey)
+        "5804c9ae25e5eb851a9cb70efc166144a2bf7b463aadb4f7e075ef23c6fb3b73" => {
+            (true, true, false, false)
+        }
+        // LiberationSans-Italic.ttf (Lingossey)
+        "111ce8210ce0929eeb4680a90154cf5ed15c8baad2d769cbf9b4e9bde79636cc" => {
+            (false, true, false, false)
+        }
+        // LiberationSans-Regular.ttf (Lingossey)
+        "7beb321fc1dc383c049e980d2071688ddfa181363b907fc4a3e97ec46a5421df" => {
+            (false, false, false, false)
+        }
+        // LiberationSerif-Bold.ttf (Lingossey)
+        "a15a36371b6aa48474611873da53cf56144076ed268d262dea5ed62955841fff" => {
+            (true, false, false, true)
+        }
+        // LiberationSerif-BoldItalic.ttf (Lingossey)
+        "fd05f85123b7584ef8bda61b1b1d25e924161a95707f13daa93aa6bb8773ee3c" => {
+            (true, true, false, true)
+        }
+        // LiberationSerif-Italic.ttf (Lingossey)
+        "7fb8e085f3103a08475225f9bbb189bf6e34f87058682bd7533d8f5d9fe2177f" => {
+            (false, true, false, true)
+        }
+        // LiberationSerif-Regular.ttf (Lingossey)
+        "0715bf41da2e11b4bb0a490a56775a0c21d8608ad8eccd68943c2bfb9a688bf3" => {
+            (false, false, false, true)
+        }
         _ => return Err(FontError::UnprofiledPdfFlags(sha.into())),
     };
     Ok(PdfFontFlags {

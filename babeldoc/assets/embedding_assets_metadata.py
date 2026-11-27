@@ -1267,6 +1267,116 @@ CMAP_METADATA = {
 }
 
 
+
+# --- Lingossey: font selebar Times/Arial (Liberation, SIL OFL 1.1), dibundel di paket ---
+LINGOSSEY_BUNDLED_FONTS = {
+    "LiberationSans-Bold.ttf": {
+        "ascent": 905,
+        "bold": 1,
+        "descent": -212,
+        "encoding_length": 2,
+        "file_name": "LiberationSans-Bold.ttf",
+        "font_name": "Liberation Sans Bold",
+        "italic": 0,
+        "monospace": 0,
+        "serif": 0,
+        "sha3_256": "de8acbbbe885d4331391ceb92c646e0716eeba8fccf8525a3f25db287e08c1b1",
+        "size": 414568
+    },
+    "LiberationSans-BoldItalic.ttf": {
+        "ascent": 905,
+        "bold": 1,
+        "descent": -212,
+        "encoding_length": 2,
+        "file_name": "LiberationSans-BoldItalic.ttf",
+        "font_name": "Liberation Sans Bold Italic",
+        "italic": 1,
+        "monospace": 0,
+        "serif": 0,
+        "sha3_256": "5804c9ae25e5eb851a9cb70efc166144a2bf7b463aadb4f7e075ef23c6fb3b73",
+        "size": 409108
+    },
+    "LiberationSans-Italic.ttf": {
+        "ascent": 905,
+        "bold": 0,
+        "descent": -212,
+        "encoding_length": 2,
+        "file_name": "LiberationSans-Italic.ttf",
+        "font_name": "Liberation Sans Italic",
+        "italic": 1,
+        "monospace": 0,
+        "serif": 0,
+        "sha3_256": "111ce8210ce0929eeb4680a90154cf5ed15c8baad2d769cbf9b4e9bde79636cc",
+        "size": 415920
+    },
+    "LiberationSans-Regular.ttf": {
+        "ascent": 905,
+        "bold": 0,
+        "descent": -212,
+        "encoding_length": 2,
+        "file_name": "LiberationSans-Regular.ttf",
+        "font_name": "Liberation Sans Regular",
+        "italic": 0,
+        "monospace": 0,
+        "serif": 0,
+        "sha3_256": "7beb321fc1dc383c049e980d2071688ddfa181363b907fc4a3e97ec46a5421df",
+        "size": 410820
+    },
+    "LiberationSerif-Bold.ttf": {
+        "ascent": 891,
+        "bold": 1,
+        "descent": -216,
+        "encoding_length": 2,
+        "file_name": "LiberationSerif-Bold.ttf",
+        "font_name": "Liberation Serif Bold",
+        "italic": 0,
+        "monospace": 0,
+        "serif": 1,
+        "sha3_256": "a15a36371b6aa48474611873da53cf56144076ed268d262dea5ed62955841fff",
+        "size": 370196
+    },
+    "LiberationSerif-BoldItalic.ttf": {
+        "ascent": 891,
+        "bold": 1,
+        "descent": -216,
+        "encoding_length": 2,
+        "file_name": "LiberationSerif-BoldItalic.ttf",
+        "font_name": "Liberation Serif Bold Italic",
+        "italic": 1,
+        "monospace": 0,
+        "serif": 1,
+        "sha3_256": "fd05f85123b7584ef8bda61b1b1d25e924161a95707f13daa93aa6bb8773ee3c",
+        "size": 376892
+    },
+    "LiberationSerif-Italic.ttf": {
+        "ascent": 891,
+        "bold": 0,
+        "descent": -216,
+        "encoding_length": 2,
+        "file_name": "LiberationSerif-Italic.ttf",
+        "font_name": "Liberation Serif Italic",
+        "italic": 1,
+        "monospace": 0,
+        "serif": 1,
+        "sha3_256": "7fb8e085f3103a08475225f9bbb189bf6e34f87058682bd7533d8f5d9fe2177f",
+        "size": 375760
+    },
+    "LiberationSerif-Regular.ttf": {
+        "ascent": 891,
+        "bold": 0,
+        "descent": -216,
+        "encoding_length": 2,
+        "file_name": "LiberationSerif-Regular.ttf",
+        "font_name": "Liberation Serif Regular",
+        "italic": 0,
+        "monospace": 0,
+        "serif": 1,
+        "sha3_256": "0715bf41da2e11b4bb0a490a56775a0c21d8608ad8eccd68943c2bfb9a688bf3",
+        "size": 393692
+    }
+}
+EMBEDDING_FONT_METADATA.update(LINGOSSEY_BUNDLED_FONTS)
+
 FONT_NAMES = {v["font_name"] for v in EMBEDDING_FONT_METADATA.values()}
 
 CN_FONT_FAMILY = {
@@ -1350,13 +1460,23 @@ JP_FONT_FAMILY = {
 }
 
 EN_FONT_FAMILY = {
+    # Lingossey: Liberation (lebar huruf = Times/Arial) didahulukan supaya terjemahan
+    # tidak perlu dikecilkan; Noto tetap ada sebagai cadangan.
     "script": [
+        "LiberationSans-Italic.ttf",
+        "LiberationSans-BoldItalic.ttf",
+        "LiberationSerif-Italic.ttf",
+        "LiberationSerif-BoldItalic.ttf",
         "NotoSans-Italic.ttf",
         "NotoSans-BoldItalic.ttf",
         "NotoSerif-Italic.ttf",
         "NotoSerif-BoldItalic.ttf",
     ],
     "normal": [
+        "LiberationSerif-Regular.ttf",
+        "LiberationSerif-Bold.ttf",
+        "LiberationSans-Regular.ttf",
+        "LiberationSans-Bold.ttf",
         "NotoSerif-Regular.ttf",
         "NotoSerif-Bold.ttf",
         "NotoSans-Regular.ttf",
