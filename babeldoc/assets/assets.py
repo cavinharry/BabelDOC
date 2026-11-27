@@ -15,9 +15,9 @@ from babeldoc.assets.embedding_assets_metadata import (
     DOCLAYOUT_YOLO_DOCSTRUCTBENCH_IMGSZ1024ONNX_SHA3_256,
 )
 from babeldoc.assets.embedding_assets_metadata import EMBEDDING_FONT_METADATA
-from babeldoc.assets.embedding_assets_metadata import LINGOSSEY_BUNDLED_FONTS
 from babeldoc.assets.embedding_assets_metadata import FONT_METADATA_URL
 from babeldoc.assets.embedding_assets_metadata import FONT_URL_BY_UPSTREAM
+from babeldoc.assets.embedding_assets_metadata import LINGOSSEY_BUNDLED_FONTS
 from babeldoc.assets.embedding_assets_metadata import TIKTOKEN_CACHES
 from babeldoc.const import get_cache_file_path
 from tenacity import retry
