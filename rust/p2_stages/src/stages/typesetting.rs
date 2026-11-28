@@ -1724,6 +1724,14 @@ fn breaks_at(units: &[TypesettingUnit], k: usize) -> bool {
     if is_number_separator(prev_digit, unit_text(&units[k]), next_digit) {
         return false;
     }
+    // unit yang diawali angka (termasuk rumus "0 × 10") tepat sesudah "1.": lanjutan angka
+    if k >= 2
+        && starts_digit(&units[k])
+        && is_sep_text(unit_text(&units[k - 1]))
+        && ends_digit(&units[k - 2])
+    {
+        return false;
+    }
     // unit yang berakhir angka (termasuk rumus "= 1") lalu diikuti ".0": jangan dipisah
     if ends_digit(&units[k])
         && units.get(k + 1).is_some_and(|n| is_sep_text(unit_text(n)))
