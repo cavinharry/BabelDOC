@@ -1254,14 +1254,19 @@ impl Typesetting {
                     x += space * 0.5
                 }
             }
-            let before = if english {
-                width_before(&mut units[i..], scale)?
+            // Lingossey: `before` sudah termasuk lebar huruf ini, jadi jangan ditambah `w` lagi
+            // (dulu terhitung dua kali sehingga huruf terakhir yang lebar pindah sendirian ke
+            // baris baru: "ato / m"). Cek hanya di awal kata, dan jangan pernah di awal baris.
+            let awal_kata = english && is_word_start(units, i);
+            let sebelum_angka = i > 0 && unit_is_digit(&units[i - 1]);
+            let before = if awal_kata {
+                run_width(&mut units[i..], sebelum_angka, scale)?
             } else {
                 0.
             };
             if !units[i].is_hung_punctuation()
                 && (x + w > right
-                    || (english && x + w + before > right)
+                    || (english && x > bx && x + before > right)
                     || (units[i].is_cannot_appear_in_line_end_punctuation() && x + w * 2. > right))
             {
                 x = bx;
@@ -1674,6 +1679,68 @@ impl Typesetting {
         Ok(())
     }
 }
+
+// ---------- Lingossey: pemotongan baris yang tidak memecah kata atau angka ----------
+fn unit_text(u: &TypesettingUnit) -> Option<&str> {
+    u.try_get_unicode()
+}
+fn unit_is_digit(u: &TypesettingUnit) -> bool {
+    unit_text(u).is_some_and(text_is_digit)
+}
+fn text_is_digit(t: &str) -> bool {
+    !t.is_empty() && t.chars().all(|c| c.is_ascii_digit())
+}
+/// "." atau "," di antara dua angka (1.0, 6,67) bukan tempat memotong baris.
+fn is_number_separator(prev: Option<&str>, cur: Option<&str>, next: Option<&str>) -> bool {
+    matches!(cur, Some("." | ","))
+        && prev.is_some_and(text_is_digit)
+        && next.is_some_and(text_is_digit)
+}
+fn breaks_at(units: &[TypesettingUnit], k: usize) -> bool {
+    if !units[k].calc_can_break_line() {
+        return false;
+    }
+    let prev = if k > 0 { unit_text(&units[k - 1]) } else { None };
+    let next = units.get(k + 1).and_then(unit_text);
+    !is_number_separator(prev, unit_text(&units[k]), next)
+}
+/// Huruf ke-i memulai kata baru (huruf sebelumnya adalah tempat memotong).
+fn is_word_start(units: &[TypesettingUnit], i: usize) -> bool {
+    i == 0 || (!breaks_at(units, i) && breaks_at(units, i - 1))
+}
+/// Lebar kata yang dimulai di units[0], termasuk angka desimal (1.0) sebagai satu kata.
+fn run_width(units: &mut [TypesettingUnit], prev_is_digit: bool, scale: f64) -> Result<f64, StageError> {
+    let mut width = 0.;
+    for k in 0..units.len() {
+        let prev = if k > 0 {
+            unit_text(&units[k - 1])
+        } else if prev_is_digit {
+            Some("0")
+        } else {
+            None
+        };
+        let next = units.get(k + 1).and_then(unit_text);
+        let cur = unit_text(&units[k]);
+        if units[k].calc_can_break_line() && !is_number_separator(prev, cur, next) {
+            break;
+        }
+        width += units[k].width()?;
+    }
+    Ok(width * scale)
+}
+#[cfg(test)]
+mod lingossey_tests {
+    use super::is_number_separator;
+    #[test]
+    fn titik_desimal_bukan_tempat_potong() {
+        assert!(is_number_separator(Some("1"), Some("."), Some("0")));
+        assert!(is_number_separator(Some("6"), Some(","), Some("6")));
+        assert!(!is_number_separator(Some("a"), Some("."), Some("0")));
+        assert!(!is_number_separator(Some("1"), Some("."), Some(" ")));
+        assert!(!is_number_separator(Some("1"), Some("-"), Some("0")));
+    }
+}
+#[allow(dead_code)]
 fn width_before(units: &mut [TypesettingUnit], scale: f64) -> Result<f64, StageError> {
     if units.is_empty() || units[0].can_break_line() {
         return Ok(0.);
